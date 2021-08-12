@@ -77,6 +77,13 @@ const DraftEditorDragHandler = {
   },
 
   /**
+   *
+   */
+  onDragOver(editor: DraftEditor, e: SyntheticDragEvent<>): SyntheticDragEvent {
+    editor.props.onDragOver && editor.props.onDragOver(e);
+  },
+
+  /**
    * Handle data being dropped.
    */
   onDrop(editor: DraftEditor, e: Object): void {
