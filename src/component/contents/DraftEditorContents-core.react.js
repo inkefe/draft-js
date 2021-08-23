@@ -35,6 +35,7 @@ type Props = {
   customStyleFn?: (style: DraftInlineStyle, block: BlockNodeRecord) => ?Object,
   customStyleMap?: Object,
   editorKey?: string,
+  contentKey: string,
   editorState: EditorState,
   preventScroll?: boolean,
   textDirectionality?: BidiDirection,
@@ -136,6 +137,7 @@ class DraftEditorContents extends React.Component<Props> {
       editorKey,
       preventScroll,
       textDirectionality,
+      contentKey,
     } = this.props;
 
     const content = editorState.getCurrentContent();
@@ -231,7 +233,10 @@ class DraftEditorContents extends React.Component<Props> {
       const child = React.createElement(
         Element,
         childProps,
-        <Component {...componentProps} key={key} />,
+        <Component
+          {...componentProps}
+          key={blockType === 'atomic' ? key : contentKey}
+        />,
       );
 
       processedBlocks.push({

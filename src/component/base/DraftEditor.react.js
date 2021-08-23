@@ -466,7 +466,7 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
             <UpdateDraftEditorFlags editor={this} editorState={editorState} />
             <DraftEditorContents
               {...editorContentsProps}
-              key={'contents' + this.state.contentsKey}
+              contentKey={'contents' + this.state.contentsKey}
             />
           </div>
         </div>
