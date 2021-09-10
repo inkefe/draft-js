@@ -180,6 +180,7 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
   _onKeyPress: Function;
   _onKeyUp: Function;
   _onMouseDown: Function;
+  _onMouseLeave: Function;
   _onMouseUp: Function;
   _onPaste: Function;
   _onSelect: Function;
@@ -231,6 +232,7 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
     this._onKeyUp = this._buildHandler('onKeyUp');
     this._onMouseDown = this._buildHandler('onMouseDown');
     this._onMouseUp = this._buildHandler('onMouseUp');
+    this._onMouseLeave = this._buildHandler('onMouseLeave');
     this._onPaste = this._buildHandler('onPaste');
     this._onSelect = this._buildHandler('onSelect');
 
@@ -453,6 +455,7 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
             onMouseUp={this._onMouseUp}
             onPaste={this._onPaste}
             onSelect={this._onSelect}
+            onMouseLeave={this._onMouseLeave}
             ref={this.props.editorRef}
             role={readOnly ? null : ariaRole}
             spellCheck={allowSpellCheck && this.props.spellCheck}
@@ -481,7 +484,6 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
       DraftEffects.initODS();
     }
     this.setMode('edit');
-
     /**
      * IE has a hardcoded "feature" that attempts to convert link text into
      * anchors in contentEditable DOM. This breaks the editor's expectations of

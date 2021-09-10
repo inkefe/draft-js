@@ -33,6 +33,11 @@ const isFirefox = UserAgent.isBrowser('Firefox');
 
 const selectionHandler: (e: DraftEditor) => void =
   isChrome || isFirefox ? onSelect : e => {};
+const MouseLeaveHandler = e => {
+  let WindowSelection = window.getSelection();
+  if (WindowSelection.isCollapsed) return;
+  onSelect(e);
+};
 
 const DraftEditorEditHandler = {
   onBeforeInput,
@@ -40,7 +45,7 @@ const DraftEditorEditHandler = {
   onCompositionStart,
   onCopy,
   onCut,
-  onDragOver,
+  onDragOver, 
   onDragStart,
   onFocus,
   onInput,
@@ -52,6 +57,7 @@ const DraftEditorEditHandler = {
   // state update handler is added to more events to ensure that the selection
   // state is always synced with the actual cursor positions.
   onMouseUp: selectionHandler,
+  onMouseLeave: MouseLeaveHandler,
   onKeyUp: selectionHandler,
 };
 
