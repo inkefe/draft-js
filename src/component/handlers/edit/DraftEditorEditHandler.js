@@ -33,10 +33,12 @@ const isFirefox = UserAgent.isBrowser('Firefox');
 
 const selectionHandler: (e: DraftEditor) => void =
   isChrome || isFirefox ? onSelect : e => {};
-const MouseLeaveHandler = e => {
+
+const MouseLeaveHandler = (editor, e) => {
   let WindowSelection = window.getSelection();
   if (WindowSelection.isCollapsed) return;
-  onSelect(e);
+  onSelect(editor);
+  e.stopPropagation();
 };
 
 const DraftEditorEditHandler = {
@@ -45,7 +47,7 @@ const DraftEditorEditHandler = {
   onCompositionStart,
   onCopy,
   onCut,
-  onDragOver, 
+  onDragOver,
   onDragStart,
   onFocus,
   onInput,

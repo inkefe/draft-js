@@ -113,6 +113,7 @@ const DraftEditorCompositionHandler = {
         DraftEditorCompositionHandler.resolveComposition(editor);
       }
       editor._onKeyDown(e);
+      e.stopPropagation();
       return;
     }
     if (e.which === Keys.RIGHT || e.which === Keys.LEFT) {
@@ -130,6 +131,7 @@ const DraftEditorCompositionHandler = {
     if (e.which === Keys.RETURN) {
       e.preventDefault();
     }
+    e.stopPropagation();
   },
 
   /**

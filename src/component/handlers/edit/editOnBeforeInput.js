@@ -124,6 +124,8 @@ function editOnBeforeInput(
   const selection = editorState.getSelection();
   const selectionStart = selection.getStartOffset();
   const anchorKey = selection.getAnchorKey();
+  const tree = editorState.getBlockTree(anchorKey);
+  if (!tree) return;
 
   if (!selection.isCollapsed()) {
     e.preventDefault();
@@ -284,6 +286,7 @@ function editOnBeforeInput(
       editOnInput(editor, null);
     });
   }
+  e.stopPropagation();
 }
 
 module.exports = editOnBeforeInput;

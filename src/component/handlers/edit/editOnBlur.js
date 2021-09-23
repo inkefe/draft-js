@@ -20,6 +20,7 @@ const containsNode = require('containsNode');
 const getActiveElement = require('getActiveElement');
 
 function editOnBlur(editor: DraftEditor, e: SyntheticEvent<HTMLElement>): void {
+  e.stopPropagation();
   // In a contentEditable element, when you select a range and then click
   // another active element, this does trigger a `blur` event but will not
   // remove the DOM selection from the contenteditable.
@@ -30,7 +31,7 @@ function editOnBlur(editor: DraftEditor, e: SyntheticEvent<HTMLElement>): void {
   // opposed to clicking to another tab or window).
   const {ownerDocument} = e.currentTarget;
   if (
-    !Boolean(editor.props.preserveSelectionOnBlur) &&
+    !editor.props.preserveSelectionOnBlur &&
     getActiveElement(ownerDocument) === ownerDocument.body
   ) {
     const selection: SelectionObject = ownerDocument.defaultView.getSelection();
