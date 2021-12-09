@@ -23,7 +23,7 @@ const getFragmentFromSelection = require('getFragmentFromSelection');
 function editOnCopy(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
   const editorState = editor._latestEditorState;
   const selection = editorState.getSelection();
-
+  e.stopPropagation(); // prevent Can`t copy in Nested editors
   // No selection, so there's nothing to copy.
   if (selection.isCollapsed()) {
     e.preventDefault();

@@ -34,6 +34,7 @@ const splitTextIntoTextBlocks = require('splitTextIntoTextBlocks');
  */
 function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
   e.preventDefault();
+  e.stopPropagation();
   const data = new DataTransfer(e.clipboardData);
 
   // Get files, unless this is likely to be a string the user wants inline.
@@ -68,8 +69,9 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
             editorState.getSelection(),
           ),
         });
-        const currentBlockType =
-          RichTextEditorUtil.getCurrentBlockType(editorState);
+        const currentBlockType = RichTextEditorUtil.getCurrentBlockType(
+          editorState,
+        );
 
         const text = DraftPasteProcessor.processText(
           blocks,
@@ -99,8 +101,10 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
   const editorState = editor._latestEditorState;
 
   if (editor.props.formatPastedText) {
-    const {text: formattedText, html: formattedHtml} =
-      editor.props.formatPastedText(text, html);
+    const {
+      text: formattedText,
+      html: formattedHtml,
+    } = editor.props.formatPastedText(text, html);
     text = formattedText;
     html = ((formattedHtml: any): string);
   }
@@ -207,8 +211,9 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
       ),
     });
 
-    const currentBlockType =
-      RichTextEditorUtil.getCurrentBlockType(editorState);
+    const currentBlockType = RichTextEditorUtil.getCurrentBlockType(
+      editorState,
+    );
 
     const textFragment = DraftPasteProcessor.processText(
       textBlocks,
