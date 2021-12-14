@@ -48,12 +48,13 @@ function editOnBlur(editor: DraftEditor, e: SyntheticEvent<HTMLElement>): void {
   const editorState = editor._latestEditorState;
   const currentSelection = editorState.getSelection();
   if (!currentSelection.getHasFocus()) {
-    return;
+    editor.props.onBlur && editor.props.onBlur(e);
+    return console.warn('React-Draft-Enhanced: editor lost focus unexpectedly');
   }
 
   const selection = currentSelection.set('hasFocus', false);
-  editor.props.onBlur && editor.props.onBlur(e);
   editor.update(EditorState.acceptSelection(editorState, selection));
+  editor.props.onBlur && editor.props.onBlur(e);
 }
 
 module.exports = editOnBlur;

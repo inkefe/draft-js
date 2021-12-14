@@ -21,11 +21,13 @@ function editOnFocus(editor: DraftEditor, e: SyntheticFocusEvent<>): void {
   const editorState = editor._latestEditorState;
   const currentSelection = editorState.getSelection();
   if (currentSelection.getHasFocus()) {
-    return;
+    editor.props.onFocus && editor.props.onFocus(e);
+    return console.warn(
+      'ReactDraftEditor-focus: The editor has already been focused.',
+    );
   }
 
   const selection = currentSelection.set('hasFocus', true);
-  editor.props.onFocus && editor.props.onFocus(e);
 
   // When the tab containing this text editor is hidden and the user does a
   // find-in-page in a _different_ tab, Chrome on Mac likes to forget what the
@@ -42,6 +44,7 @@ function editOnFocus(editor: DraftEditor, e: SyntheticFocusEvent<>): void {
   } else {
     editor.update(EditorState.acceptSelection(editorState, selection));
   }
+  editor.props.onFocus && editor.props.onFocus(e);
 }
 
 module.exports = editOnFocus;
