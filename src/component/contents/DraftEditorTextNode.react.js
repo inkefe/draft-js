@@ -17,10 +17,11 @@ const invariant = require('invariant');
 const isElement = require('isElement');
 const React = require('react');
 
+const isSafari = UserAgent.isBrowser('Safari');
+
 // In IE, spans with <br> tags render as two newlines. By rendering a span
 // with only a newline character, we can be sure to render a single line.
-const useNewlineChar = UserAgent.isBrowser('IE <= 11');
-
+const useNewlineChar = UserAgent.isBrowser('IE <= 11') || isSafari;
 /**
  * Check whether the node should be considered a newline.
  */
@@ -42,7 +43,7 @@ function isNewline(node: Element): boolean {
 const NEWLINE_A = ref =>
   useNewlineChar ? (
     <span key="A" data-text="true" ref={ref}>
-      {'\n'}
+      {isSafari ? '\u200b' : '\n'}
     </span>
   ) : (
     <br key="A" data-text="true" ref={ref} />
@@ -51,7 +52,7 @@ const NEWLINE_A = ref =>
 const NEWLINE_B = ref =>
   useNewlineChar ? (
     <span key="B" data-text="true" ref={ref}>
-      {'\n'}
+      {isSafari ? '\u200b' : '\n'}
     </span>
   ) : (
     <br key="B" data-text="true" ref={ref} />
@@ -98,7 +99,9 @@ class DraftEditorTextNode extends React.Component<Props> {
   }
 
   render(): React.Node {
-    if (this.props.children === '') {
+    let {children} = this.props;
+    if (typeof children === 'string') children = children.replace(/\u200b/, '');
+    if (children === '') {
       return this._forceFlag
         ? NEWLINE_A(ref => (this._node = ref))
         : NEWLINE_B(ref => (this._node = ref));
@@ -108,7 +111,7 @@ class DraftEditorTextNode extends React.Component<Props> {
         key={this._forceFlag ? 'A' : 'B'}
         data-text="true"
         ref={ref => (this._node = ref)}>
-        {this.props.children}
+        {children}
       </span>
     );
   }

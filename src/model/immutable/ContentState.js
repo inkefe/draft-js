@@ -157,7 +157,7 @@ class ContentState extends ContentStateRecord {
     return (
       blockMap.size > 1 ||
       // make sure that there are no zero width space chars
-      escape(blockMap.first().getText()).replace(/%u200B/g, '').length > 0
+      escape(blockMap.first().getText()).replace(/\u200B/gi, '').length > 0
     );
   }
 
