@@ -50,6 +50,7 @@ class DOMObserver {
   constructor(container: HTMLElement) {
     this.container = container;
     this.mutations = Map();
+    // this._mutations = [];
     const containerWindow = getWindowForNode(container);
     const MutationObserver = containerWindow.MutationObserver;
     if (MutationObserver && !USE_CHAR_DATA) {
@@ -71,6 +72,7 @@ class DOMObserver {
   }
 
   start(): void {
+    this.target = null;
     if (this.observer) {
       this.observer.observe(this.container, DOM_OBSERVER_OPTIONS);
     } else {
@@ -98,6 +100,7 @@ class DOMObserver {
     }
     const mutations = this.mutations;
     this.mutations = Map();
+    // this._mutations = [];
     return mutations;
   }
 
@@ -145,6 +148,9 @@ class DOMObserver {
   registerMutation(mutation: MutationRecordT): void {
     const textContent = this.getMutationTextContent(mutation);
     if (textContent != null) {
+      this.target = this.target || mutation.target;
+      if (mutation.target !== this.target) return;
+      // this._mutations.push(mutation);
       const offsetKey = nullthrows(findAncestorOffsetKey(mutation.target));
       this.mutations = this.mutations.set(offsetKey, textContent);
     }
