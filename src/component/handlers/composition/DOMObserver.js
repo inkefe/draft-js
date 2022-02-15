@@ -72,7 +72,7 @@ class DOMObserver {
   }
 
   start(): void {
-    this.target = null;
+    this.offsetKey = null;
     if (this.observer) {
       this.observer.observe(this.container, DOM_OBSERVER_OPTIONS);
     } else {
@@ -148,10 +148,11 @@ class DOMObserver {
   registerMutation(mutation: MutationRecordT): void {
     const textContent = this.getMutationTextContent(mutation);
     if (textContent != null) {
-      this.target = this.target || mutation.target;
-      if (mutation.target !== this.target) return;
+      const offsetKey = findAncestorOffsetKey(mutation.target);
+      if (!offsetKey) return;
+      this.offsetKey = this.offsetKey || offsetKey;
+      if (this.offsetKey !== offsetKey) return;
       // this._mutations.push(mutation);
-      const offsetKey = nullthrows(findAncestorOffsetKey(mutation.target));
       this.mutations = this.mutations.set(offsetKey, textContent);
     }
   }
