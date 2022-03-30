@@ -17,7 +17,6 @@ const findAncestorOffsetKey = require('findAncestorOffsetKey');
 const getWindowForNode = require('getWindowForNode');
 const Immutable = require('immutable');
 const invariant = require('invariant');
-const nullthrows = require('nullthrows');
 
 const {Map} = Immutable;
 
@@ -71,8 +70,10 @@ class DOMObserver {
     }
   }
 
-  start(): void {
-    this.offsetKey = null;
+  start(editor): void {
+    const lastEditorState = editor._latestEditorState;
+    const selection = lastEditorState.getSelection();
+    this.starKey = selection.getStartKey();
     if (this.observer) {
       this.observer.observe(this.container, DOM_OBSERVER_OPTIONS);
     } else {
@@ -98,6 +99,7 @@ class DOMObserver {
         this.onCharData,
       );
     }
+    this.starKey = null;
     const mutations = this.mutations;
     this.mutations = Map();
     // this._mutations = [];
@@ -150,8 +152,9 @@ class DOMObserver {
     if (textContent != null) {
       const offsetKey = findAncestorOffsetKey(mutation.target);
       if (!offsetKey) return;
-      this.offsetKey = this.offsetKey || offsetKey;
-      if (this.offsetKey !== offsetKey) return;
+      const blockKey = offsetKey.split('-')[0];
+      this.starKey = this.starKey || blockKey;
+      if (this.starKey !== blockKey) return;
       // this._mutations.push(mutation);
       this.mutations = this.mutations.set(offsetKey, textContent);
     }

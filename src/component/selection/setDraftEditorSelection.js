@@ -132,6 +132,8 @@ function setDraftEditorSelection(
   let focusOffset = selectionState.getFocusOffset();
   let isBackward = selectionState.getIsBackward();
 
+  if (anchorOffset !== focusOffset) return;
+
   // IE doesn't support backward selection. Swap key/offset pairs.
   if (!selection.extend && isBackward) {
     const tempKey = anchorKey;
@@ -273,7 +275,7 @@ function addFocusToSelection(
       }
     } catch (e) {
       DraftJsDebugLogging.logSelectionStateFailure({
-        anonymizedDom: getAnonymizedEditorDOM(node, function (n) {
+        anonymizedDom: getAnonymizedEditorDOM(node, function(n) {
           const labels = [];
           if (n === activeElement) {
             labels.push('active element');

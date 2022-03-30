@@ -8,7 +8,6 @@
  * @flow strict-local
  * @emails oncall+draft_js
  */
-
 'use strict';
 
 import type DraftEditor from 'DraftEditor.react';
@@ -53,7 +52,7 @@ let domObserver = null;
 function startDOMObserver(editor: DraftEditor) {
   if (!domObserver) {
     domObserver = new DOMObserver(getContentEditableContainer(editor));
-    domObserver.start();
+    domObserver.start(editor);
   }
 }
 
@@ -198,7 +197,9 @@ const DraftEditorCompositionHandler = {
 
       if (!block) return;
 
-      const {start, end} = block.getIn([decoratorKey, 'leaves', leafKey]);
+      const res = block.getIn([decoratorKey, 'leaves', leafKey]);
+      if (!res) return;
+      const {start, end} = res;
 
       const replacementRange = editorState.getSelection().merge({
         anchorKey: blockKey,
