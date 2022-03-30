@@ -17,17 +17,7 @@ import type SelectionState from 'SelectionState';
 const DraftOffsetKey = require('DraftOffsetKey');
 
 const nullthrows = require('nullthrows');
-const getCollapseSelection = selection => {
-  const anchorKey = selection.getAnchorKey();
-  const anchorOffset = selection.getAnchorOffset();
-  return selection.merge({
-    anchorKey,
-    anchorOffset,
-    focusKey: anchorKey,
-    focusOffset: anchorOffset,
-    isBackward: false,
-  });
-};
+
 function getUpdatedSelectionState(
   editorState: EditorState,
   anchorKey: string,
@@ -42,7 +32,7 @@ function getUpdatedSelectionState(
       /* eslint-disable-next-line */
       console.warn('Invalid selection state.', arguments, editorState.toJS());
     }
-    return getCollapseSelection(selection);
+    return selection;
   }
 
   const anchorPath = DraftOffsetKey.decode(anchorKey);
@@ -73,7 +63,7 @@ function getUpdatedSelectionState(
       /* eslint-disable-next-line */
       console.warn('Invalid selection state.', arguments, editorState.toJS());
     }
-    return getCollapseSelection(selection);
+    return selection;
   }
 
   const anchorLeafStart: number = anchorLeaf.get('start');
@@ -89,7 +79,7 @@ function getUpdatedSelectionState(
     selection.getFocusOffset() === focusBlockOffset;
 
   if (areEqual) {
-    return getCollapseSelection(selection);
+    return selection;
   }
 
   let isBackward = false;
